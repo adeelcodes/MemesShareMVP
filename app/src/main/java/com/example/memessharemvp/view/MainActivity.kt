@@ -1,73 +1,53 @@
 package com.example.memessharemvp.view
 
-import android.graphics.drawable.Drawable
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.example.memessharemvp.R
-import com.example.memessharemvp.contract.ContractInterface.*
-import com.example.memessharemvp.presenter.MainActivityPresenter
+import com.example.memessharemvp.contract.MemeInterface.MemePresenter
+import com.example.memessharemvp.contract.MemeInterface.MemeView
+import com.example.memessharemvp.presenter.MainActivityMemePresenter
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity: AppCompatActivity(), View  {
+class MainActivity: AppCompatActivity(), MemeView  {
 
-    var presenter: Presenter? = null
+    private lateinit var memePresenter: MemePresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        presenter = MainActivityPresenter(this)
+        memePresenter = MainActivityMemePresenter(this)
+        memePresenter.getMeme(this)
+
+        nextButton.setOnClickListener {
+            memePresenter.getMeme(this)
+        }
+
+        shareButton.setOnClickListener {
+            memePresenter.shareMeme()
+        }
     }
 
-
-    override fun initView() {
-        val image = presenter?.getMeme()
-        Glide.with(this).load(image).listener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>?,
-                isFirstResource: Boolean
-            ): Boolean {
-                return false
-            }
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                return false
-            }
-        }).into(memeImageView)
+    override fun updateView(url: String) {
+        progressBar.visibility = View.GONE
+        Glide.with(this).load(url).into(memeImageView)
     }
 
-    override fun updateView() {
-        val image = presenter?.getMeme()
-        Glide.with(this).load(image).listener(object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>?,
-                isFirstResource: Boolean
-            ): Boolean {
-                return false
-            }
-            override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
-                isFirstResource: Boolean
-            ): Boolean {
-                return false
-            }
-        }).into(memeImageView)
+    override fun onLoading() {
+        progressBar.visibility = View.VISIBLE
     }
+
+    override fun onLoadingFailed() {
+        progressBar.visibility = View.GONE
+        Toast.makeText(this, "warh gaye", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onStartActivity(intent: Intent) {
+        startActivity(intent)
+    }
+
 }

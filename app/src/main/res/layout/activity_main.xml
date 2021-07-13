@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/memeImageView"
@@ -25,6 +24,7 @@
         app:layout_constraintBottom_toBottomOf="@id/memeImageView"
         app:layout_constraintLeft_toLeftOf="@id/memeImageView"
         app:layout_constraintRight_toRightOf="@id/memeImageView"
+        android:visibility="gone"
         />
 
     <Button
