@@ -9,7 +9,7 @@ class MainActivityMemePresenter (_memeView: MemeView) : MemePresenter {
     private var memeView: MemeView = _memeView
     private var model: Model = MainActivityModel()
 
-    private var currentImageUrl: String? = null
+    private var memeImageUrl: String? = null
 
     override fun getMeme(context: Context) {
         memeView.onLoading()
@@ -17,7 +17,7 @@ class MainActivityMemePresenter (_memeView: MemeView) : MemePresenter {
             context = context,
             onResponse = { url ->
                 if (url != null){
-                    currentImageUrl = url
+                    memeImageUrl = url
                     memeView.updateView(url)
                 } else{
                     memeView.onLoadingFailed()
@@ -29,7 +29,7 @@ class MainActivityMemePresenter (_memeView: MemeView) : MemePresenter {
     override fun shareMeme() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
-        intent.putExtra(Intent.EXTRA_TEXT, "Hey, checkout this cool meme I got from Reddit $currentImageUrl")
+        intent.putExtra(Intent.EXTRA_TEXT, "Hey, checkout this cool meme I got from Reddit $memeImageUrl")
         val chooser = Intent.createChooser(intent, "Share this meme using ... ")
         memeView.onStartActivity(chooser)
     }
